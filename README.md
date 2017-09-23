@@ -4,6 +4,7 @@ This package can be used to do some simple operations using the Boston 311 data 
 
 Directory Structure
 ---------------------
+```
 root
 |
 +---Boston_311
@@ -15,7 +16,7 @@ root
 |   | analysis_311.py
 |
 | README.md
-
+```
 Usage
 --------
 
