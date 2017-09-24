@@ -1,48 +1,55 @@
+from urllib import request
 import urllib
 import json
 from json import *
 import pandas as pd
-from urllib import request
 
 class Data_Pull(object):
 
-"""
-This object retrieve Boston 311 data. It is initialized with the following
-information:
+    """
+    This object retrieve Boston 311 data. It is initialized with the following
+    information:
 
-url: A CKAN url from data.boston.gov
+    url: A CKAN url from data.boston.gov
 
-num_records: The number of records to retrieve
+    num_records: The number of records to retrieve
 
-case_status: "Open", "Closed".
+    case_status: "Open", "Closed", or "all"
 
-neighborhood: A Boston neighborhood, e.g. "Jamaica Plain", "Roxbury". "all" by
-default.
+    neighborhood: A Boston neighborhood, e.g. "Jamaica Plain", "Roxbury". "all" by
+    default.
 
-case_type: A 311 case_type e.g. "Parking Enforcement", "Requests for Street
-Cleaning"
+    case_type: A 311 case_type e.g. "Parking Enforcement", "Requests for Street
+    Cleaning"
 
-calculate_diff: True or False. If true, time difference between open and close dates
-is generated as a column in the resulting data frame.
+    calculate_diff: True or False. If true, time difference between open and close dates
+    is generated as a column in the resulting data frame.
 
-"""
+    """
 
 
     def __init__(self,
                 url,
                 num_records,
-                case_status,
+                case_status = 'all',
+                department = 'all',
                 neighborhood = 'all',
-                case_type = 'all'
+                case_type = 'all',
                 calculate_diff = False):
 
         self.url = url
         self.num_records = num_records
         self.case_status = case_status
+        self.department = department
         self.neighborhood = neighborhood
         self.case_type = case_type
 
     def read_url(self):
+
+        """
+        read_url() takes a CKAN url, then translates the resulting json
+        into a pandas dataframe.
+        """
 
         url = str(self.url)
         num_records = str(self.num_records)
@@ -55,10 +62,23 @@ is generated as a column in the resulting data frame.
 
     def get_cases(self):
 
-        df = self.read_url()
-        df = df[df['CASE_STATUS'] == self.case_status]
+        """
+        get_cases() takes a data frame of 311 results, and subsets it such that
+        all the results are open, closed, or both.
+        """
 
-        return df
+        print('Getting {} cases...'.format(self.num_records))
+
+        if self.case_status == 'all':
+
+            df = self.read_url()
+            df = df[df['CASE_STATUS'] == 'Open' | df['CASE_STATUS'] == "Closed"]
+            return df
+
+        else:
+            df = self.read_url()
+            df = df[df['CASE_STATUS'] == self.case_status]
+            return df
 
     def list_case_types(self):
 
@@ -66,7 +86,7 @@ is generated as a column in the resulting data frame.
         case_types = df['TYPE'].unique()
 
         for case_type in case_types:
-            if case_type is NULL:
+            if case_type is None:
                 continue
 
             else:
@@ -78,15 +98,30 @@ is generated as a column in the resulting data frame.
         neighborhoods = df['neighborhood'].unique()
 
         for neighborhood in neighborhoods:
-            if neighborhood is NULL:
+            if neighborhood is None:
                 continue
 
             else:
                 print(neighborhood)
 
+    def select_department(self, df):
+        df = df
+
+        if self.department == 'all':
+            print('Selecting from all departments...')
+            return df
+
+        else:
+            print('Selecting from {} deparment...'.format(self.department))
+            df = df[df['SUBJECT'] == self.department]
+            return df
+
     def select_case_type(self, df):
 
+        print('Selecting {}'.format(self.case_type))
+
         if self.case_type == 'all':
+            df = df
             return df
 
         else:
@@ -96,6 +131,7 @@ is generated as a column in the resulting data frame.
 
     def select_neighborhood(self, df):
 
+        print('Selecting cases in {}'.format(self.neighborhood))
         if self.neighborhood == 'all':
             return df
 
@@ -115,8 +151,11 @@ is generated as a column in the resulting data frame.
 
     def return_data(self):
 
+        print('Retrieving data...')
         df = self.get_cases()
+        df = self.select_department(df)
         df = self.select_case_type(df)
         df = self.select_neighborhood(df)
+        print('{} number of entries retrieved after case and neighborhood selection'.format(len(df)))
 
         return df
