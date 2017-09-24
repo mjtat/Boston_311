@@ -67,17 +67,19 @@ class Data_Pull(object):
         all the results are open, closed, or both.
         """
 
-        print('Getting {} cases...'.format(self.num_records))
+        #print('Getting {} cases...'.format(self.num_records))
+
+        df = self.read_url()
 
         if self.case_status == 'all':
+            return df
 
-            df = self.read_url()
-            df = df[df['CASE_STATUS'] == 'Open' | df['CASE_STATUS'] == "Closed"]
+        elif self.case_status == 'Open':
+            df = df[df['CASE_STATUS'] == 'Open']
             return df
 
         else:
-            df = self.read_url()
-            df = df[df['CASE_STATUS'] == self.case_status]
+            df = df[df['CASE_STATUS'] == 'Closed']
             return df
 
     def list_case_types(self):
@@ -139,15 +141,6 @@ class Data_Pull(object):
             df = df
             df = df[df['neighborhood'] == self.neighborhood]
             return df
-
-    def calculate_diff(self, df):
-
-        df = df
-        df['open_dt'] = pd.to_datetime(df['open_dt'])
-        df['closed_dt'] = pd.to_datetime(df['closed_dt'])
-        df['time_to_close'] = (df['closed_dt'] - df['open_dt']).astype('timedelta64[h]')
-
-        return df
 
     def return_data(self):
 
