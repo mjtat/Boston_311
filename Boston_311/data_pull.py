@@ -6,6 +6,28 @@ from urllib import request
 
 class Data_Pull(object):
 
+"""
+This object retrieve Boston 311 data. It is initialized with the following
+information:
+
+url: A CKAN url from data.boston.gov
+
+num_records: The number of records to retrieve
+
+case_status: "Open", "Closed".
+
+neighborhood: A Boston neighborhood, e.g. "Jamaica Plain", "Roxbury". "all" by
+default.
+
+case_type: A 311 case_type e.g. "Parking Enforcement", "Requests for Street
+Cleaning"
+
+calculate_diff: True or False. If true, time difference between open and close dates
+is generated as a column in the resulting data frame.
+
+"""
+
+
     def __init__(self,
                 url,
                 num_records,
