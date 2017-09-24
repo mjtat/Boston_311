@@ -22,7 +22,9 @@ Usage
 
 Clone this directory. At the moment, place any analysis script in the `src` directory. Import the package using the following command: `from Boston_311.data_pull import Data_Pull`.
 
-*Methods in Boston_311*
+Methods in Boston_311
+-----------------------
+
 The class `Data_Pull` takes five arguments: url, num_records, case_status, neighborhood, and case_type.
 
 * `url`: The API url taken from the Boston 311 open dataset. An example of this is as follows:
