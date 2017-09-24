@@ -6,10 +6,18 @@ from urllib import request
 
 class Data_Pull(object):
 
-    def __init__(self, url, num_records, case_status):
+    def __init__(self,
+                url,
+                num_records,
+                case_status,
+                neighborhood = 'all',
+                case_type = 'all'):
+
         self.url = url
         self.num_records = num_records
         self.case_status = case_status
+        self.neighborhood = neighborhood
+        self.case_type = case_type
 
     def read_url(self):
 
@@ -29,11 +37,56 @@ class Data_Pull(object):
 
         return df
 
-    def calculate_diff(self):
+    def list_case_titles(self):
 
         df = self.get_cases()
+        print(df['TYPE'].unique())
+        case_titles = df['TYPE'].unique()
+
+        return case_titles
+
+    def list_neighborhoods(self):
+
+        df = self.get_cases()
+        neighborhoods = df['neighborhood'].unique()
+
+        for neighborhood in neighborhoods:
+            print(neighborhood)
+
+    def select_case_type(self, df):
+        if self.case_type == 'all':
+            return df
+
+        else:
+            df = df
+            df = df[df['TYPE'] == self.case_type]
+            return df
+
+        return df
+
+    def select_neighborhood(self, df):
+
+        if self.neighborhood == 'all':
+            return df
+
+        else:
+            df = df
+            df = df[df['neighborhood'] == self.neighborhood]
+            return df
+
+    def calculate_diff(self, df):
+
+        df = df
         df['open_dt'] = pd.to_datetime(df['open_dt'])
         df['closed_dt'] = pd.to_datetime(df['closed_dt'])
         df['time_to_close'] = (df['closed_dt'] - df['open_dt']).astype('timedelta64[h]')
+
+        return df
+
+    def return_data(self):
+
+        df = self.get_cases()
+        df = self.select_case_type(df)
+        df = self.select_neighborhood(df)
 
         return df
