@@ -11,16 +11,15 @@ case_status = 'Closed'
 neighborhood = 'Back Bay'
 case_type = 'Parking Enforcement'
 
-query_one = Data_Pull(url,
+# Create a query for back bay parking enforcement
+back_bay_parking = Data_Pull(url,
                       num_records,
                       case_status,
                       neighborhood,
                       case_type)
 
-cases = query_one.list_case_titles()
+# Get all the data for the back bay
+df = back_bay_parking.return_data()
 
-neighborhoods = query_one.list_neighborhoods()
-
-query_one_df = query_one.calculate_diff(query_one_df)
-
-query_one_df
+# Write data to a csv
+df.to_csv('back_bay.csv', index = False)
