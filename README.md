@@ -34,7 +34,26 @@ number of 311 records.
 
 * case_status: Either "Open", or "Closed".
 
-There are several helper functions. `read_url()` takes the url and reads the data
-into a DataFrame. `get_cases()` retrieved open or closed cases. `calculate_diff()`
+**There are several helper functions.**
+
+* `read_url()` takes the url and reads the data.
+into a DataFrame.  
+
+* `get_cases()` retrieves open or closed cases.
+
+* `list_case_titles()` lists all case types.
+
+* `list_neighborhoods()` lists all neighborhoods.
+
+* `select_case_type()` selects the case type. The default selects all cases, unless otherwise specified.
+
+* `select_neighborhood()` selects the appropriate neighborhood (e.g., 'Roxbury', 'Jamaica Plain'). The default selects all neighborhoods unless otherwise specified.
+
+* `calculate_diff()`
 takes the difference in time between closed and opened cases, and returns a number
-in hours.
+in hours. The default is set as False. If set true,
+differences will appear in a column titled `time_to_close`.
+
+* `return_data()` returns all the requested data in the pipeline.
+
+*NOTE*: helper functions can be run individually, though if you only care to return all the data, all at once, the `return_data()` method should be the only one you should care about.
