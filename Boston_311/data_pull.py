@@ -11,7 +11,8 @@ class Data_Pull(object):
                 num_records,
                 case_status,
                 neighborhood = 'all',
-                case_type = 'all'):
+                case_type = 'all'
+                calculate_diff = False):
 
         self.url = url
         self.num_records = num_records
@@ -37,13 +38,17 @@ class Data_Pull(object):
 
         return df
 
-    def list_case_titles(self):
+    def list_case_types(self):
 
         df = self.get_cases()
-        print(df['TYPE'].unique())
-        case_titles = df['TYPE'].unique()
+        case_types = df['TYPE'].unique()
 
-        return case_titles
+        for case_type in case_types:
+            if case_type is NULL:
+                continue
+
+            else:
+                print(case_type)
 
     def list_neighborhoods(self):
 
@@ -51,9 +56,14 @@ class Data_Pull(object):
         neighborhoods = df['neighborhood'].unique()
 
         for neighborhood in neighborhoods:
-            print(neighborhood)
+            if neighborhood is NULL:
+                continue
+
+            else:
+                print(neighborhood)
 
     def select_case_type(self, df):
+
         if self.case_type == 'all':
             return df
 
@@ -61,8 +71,6 @@ class Data_Pull(object):
             df = df
             df = df[df['TYPE'] == self.case_type]
             return df
-
-        return df
 
     def select_neighborhood(self, df):
 
