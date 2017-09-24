@@ -7,14 +7,14 @@ case_status = 'all'
 neighborhood = 'Jamaica Plain'
 department = 'Public Works Department'
 
-# Create a query for back bay parking enforcement
+# Create a query for Jamaica Plain
 back_bay_parking = Data_Pull(url,
                       num_records,
                       case_status,
                       department,
                       neighborhood)
 
-# Get all the data for the back bay
+# Get all the data for the Jamaica Plain
 jp.list_case_types()
 df = jp.return_data()
 df
