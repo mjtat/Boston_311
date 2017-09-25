@@ -10,6 +10,7 @@ root
 +---Boston_311
 |   |
 |   | data_pull.py
+|   | analysis.py
 |
 +---src
 |   |
@@ -20,12 +21,12 @@ root
 Usage
 --------
 
-Clone this directory. At the moment, place any analysis script in the `src` directory. Import the package using the following command: `from Boston_311.data_pull import Data_Pull`.
+Clone this directory. At the moment, place any analysis script in the `src` directory. Import the package using the following commands: `from Boston_311.data_pull import Data_Pull` and `from Boston_311.analysis import Analysis`.
 
 Methods in Boston_311
 -----------------------
 
-The class `Data_Pull` takes five arguments: url, num_records, case_status, neighborhood, and case_type.
+**The class `Data_Pull` takes five arguments: url, num_records, case_status, neighborhood, and case_type.**
 
 * `url`: The API url taken from the Boston 311 open dataset. An example of this is as follows:
 ```
@@ -55,11 +56,16 @@ into a DataFrame.
 
 * `select_neighborhood()` selects the appropriate neighborhood (e.g., 'Roxbury', 'Jamaica Plain'). The default selects all neighborhoods unless otherwise specified.
 
-* `calculate_diff()`
-takes the difference in time between closed and opened cases, and returns a number
-in hours. The default is set as False. If set true,
-differences will appear in a column titled `time_to_close`.
+* `select_department()` selects the department of interest (e.g., 'Public Works Department'). The default selects all unless otherwise specified.
 
 * `return_data()` returns all the requested data in the pipeline.
 
 *NOTE*: helper functions can be run individually, though if you only care to return all the data, all at once, the `return_data()` method should be the only one you should care about.
+
+**The class `Analysis` takes one argument: a data frame with which to do some basic analyses on. This class also has several helper functions.**
+
+* `calculate_diff()` takes a 311 data frame, converts the `open_dt` and `close_dt` columns to the appropriate datetime format, then finds their difference in hours, creating a column titled `time_to_close`. Additionally, it takes the difference between `close_dt` and `target_dt` to determine how on or off time (in hours), a request was. This returns a data frame that can be fed into other methods.
+
+* `summary_statistics()` takes three arguments: a 311 data frame, different fields to group by (a list of strings, e.g., ['REASON', 'Source']) and a field to get summary stats on (e.g., time_to_close). This returns a list of data frames that consist of basic summary statistics for the different fields you specified.
+
+* `write_data()` takes two arguments, a 311 dataframe, and csv (set to True by default). Setting csv == True outputs a csv file, setting csv to false outputs as JSON file.S
